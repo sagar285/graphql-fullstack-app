@@ -91,8 +91,8 @@ const mutation = new GraphQLObjectType({
       type: Userschema,
       args: {
         id: { type: GraphQLNonNull(GraphQLID) },
-        name: { type: GraphQLNonNull(GraphQLString) },
-        email: { type: GraphQLNonNull(GraphQLString) },
+        name: { type: GraphQLString },
+        email: { type: GraphQLString},
       },
       resolve(parent, args) {
         return User.findByIdAndUpdate(
@@ -115,6 +115,11 @@ const mutation = new GraphQLObjectType({
             id:{type:GraphQLNonNull(GraphQLID)},
         },
         resolve(parent,args){
+          Task.find({user:args.id}).then((task)=>{
+            task.forEach(data=>{
+              data.deleteOne();
+            })
+          })
             return User.findByIdAndDelete(args.id);
         }
     },
@@ -138,8 +143,8 @@ const mutation = new GraphQLObjectType({
         type:Taskschema,
         args:{
             id: { type: GraphQLNonNull(GraphQLID) },
-            title: { type: GraphQLNonNull(GraphQLString) },
-            description: { type: GraphQLNonNull(GraphQLString) }, 
+            title: { type: GraphQLString },
+            description: { type:GraphQLString }, 
         },
         resolve(parent,args){
             return Task.findByIdAndUpdate(args.id,{
